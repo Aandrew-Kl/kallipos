@@ -27,9 +27,9 @@ for file in text/ch*.txt; do
    pandoc --lua-filter=extras.lua "$file" --to markdown | \
       pandoc --lua-filter=extras.lua --to markdown | \
       pandoc --lua-filter=epigraph.lua --to markdown | \
-      pandoc --lua-filter=figure.lua --to markdown | \
       pandoc --lua-filter=footnote.lua --to markdown | \
-      pandoc --lua-filter=complexity.lua --to markdown | \
+      pandoc --from=markdown+simple_tables --lua-filter=complexity.lua --to markdown | \
+      pandoc --lua-filter=figure.lua --to markdown | \
       pandoc --filter pandoc-fignos --to markdown | \
       pandoc --metadata-file=meta.yml --top-level-division=chapter --citeproc --bibliography=bibliography/"$(basename "$file" .txt).bib" --reference-location=section --wrap=none --to latex > latex/"02_$(basename "$file" .txt).tex"
 done
@@ -46,8 +46,8 @@ for file in text/apx*.txt; do
    pandoc --lua-filter=extras.lua "$file" --to markdown | \
       pandoc --lua-filter=extras.lua --to markdown | \
       pandoc --lua-filter=epigraph.lua --to markdown | \
-      pandoc --lua-filter=figure.lua --to markdown | \
       pandoc --lua-filter=complexity.lua --to markdown | \
+      pandoc --lua-filter=figure.lua --to markdown | \
       pandoc --filter pandoc-fignos --to markdown | \
       pandoc --metadata-file=meta.yml --top-level-division=chapter --citeproc --bibliography=bibliography/"$(basename "$file" .txt).bib" --reference-location=section --to latex > latex/"04_$(basename "$file" .txt).tex"
 done
@@ -57,14 +57,18 @@ printf "\t\t${GREEN}Done${COLOR_OFF}\n"
 printf "Combining generated LaTeX files in single book:"
 
 pandoc -s latex/*.tex -o book.tex
+# TODO Change chapters numbering
+
 printf "\t\t\t${GREEN}Done${COLOR_OFF}\n"
 
 printf "Exporting ./book.tex in PDF format:"
+
 pandoc -N --quiet -V documentclass=book -V "geometry=margin=1.2in" \
    -V mainfont="GFS Didot" -V sansfont="GFS Didot" -V monofont="GFS Didot" \
-   -V fontsize=12pt -V version=2.0 book.tex \
-   --metadata-file=meta.yml \
+   -V fontsize=12pt -V version=2.0 \
+   --metadata-file=meta.yml book.tex \
    --pdf-engine=xelatex --toc -o book.pdf
+
 printf "            \t\t\t${GREEN}Done${COLOR_OFF}\n"
 
 echo ""

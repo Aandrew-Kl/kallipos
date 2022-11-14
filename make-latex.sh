@@ -56,20 +56,16 @@ printf "\t\t${GREEN}Done${COLOR_OFF}\n"
 
 printf "Combining generated LaTeX files in single book:"
 
-pandoc -s latex/*.tex -o book.tex
+
+# mkdir -p latex/body
+# mv latex/02*.tex latex/body/
+# pandoc -s latex/body/*.tex -o latex/02_book.tex
+# rm -fr latex/body
+
 # TODO Change chapters numbering
+pandoc -s latex/*.tex -o book.tex
 
 printf "\t\t\t${GREEN}Done${COLOR_OFF}\n"
-
-printf "Exporting ./book.tex in PDF format:"
-
-pandoc -N --quiet -V documentclass=book -V "geometry=margin=1.2in" \
-   -V mainfont="GFS Didot" -V sansfont="GFS Didot" -V monofont="GFS Didot" \
-   -V fontsize=12pt -V version=2.0 \
-   --metadata-file=meta.yml book.tex \
-   --pdf-engine=xelatex --toc -o book.pdf
-
-printf "            \t\t\t${GREEN}Done${COLOR_OFF}\n"
 
 echo ""
 echo "LaTeX files generated:"
@@ -78,4 +74,3 @@ for file in latex/*; do
 done
 
 printf "LaTeX ebook generated:\n\t${GREEN}${UNDERLINED}./book.tex${COLOR_OFF}\n" 
-printf "PDF ebook generated:\n\t${GREEN}${UNDERLINED}./book.pdf${COLOR_OFF}\n"

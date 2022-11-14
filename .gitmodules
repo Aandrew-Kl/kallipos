@@ -22,5 +22,6 @@
 [submodule "complexity"]
 	path = complexity
 	url = https://github.com/Aandrew-Kl/_book_complexity.git
+	branch = main
 
 
